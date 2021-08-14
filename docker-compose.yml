@@ -1,6 +1,6 @@
 version: "3.8"
 services:
-    db:
+  db:
     container_name: scelefeed-db
     image: postgres:13.3-alpine
     volumes:
@@ -15,22 +15,26 @@ services:
     ports: 
       - "5433:5432"
 
-  server:
-    container_name: server-scelefeed
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "${SERVER_PORT}:${SERVER_PORT}"
-    depends_on:
-      - mongo
-    environment:
-      - DB_HOST=db
-      - DB_PORT=5432
-    networks:
-      - scelefeed
-    command: ["/app/main"]
+  # server:
+  #   container_name: server-scelefeed
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "${SERVER_PORT}:${SERVER_PORT}"
+  #   depends_on:
+  #     - mongo
+  #   environment:
+  #     - DB_HOST=db
+  #     - DB_PORT=5432
+  #   networks:
+  #     - scelefeed
+  #   command: ["/app/main"]
 
+volumes:
+  db-data:
+    driver: local
+    
 networks:
   scelefeed:
     driver: bridge

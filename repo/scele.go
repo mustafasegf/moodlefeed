@@ -15,8 +15,8 @@ func NewSceleRepo(db *gorm.DB) *Scele {
 	}
 }
 
-func (repo *Scele) insert(model interface{}, table string) (err error) {
-	query := repo.db.Table(table).Begin().
+func (repo *Scele) CreateUser(model entity.UsersModel) (err error) {
+	query := repo.db.Table("users").Begin().
 		Create(&model)
 	if err = query.Error; err != nil {
 		query.Rollback()
@@ -26,7 +26,33 @@ func (repo *Scele) insert(model interface{}, table string) (err error) {
 	return
 }
 
-func (repo *Scele) SaveToken(model entity.UserModel) (err error) {
-	err = repo.insert(model, "users")
+func (repo *Scele) CreateCourse(model entity.CoursesModel) (err error) {
+	query := repo.db.Table("courses").Begin().
+		Create(&model)
+	if err = query.Error; err != nil {
+		query.Rollback()
+		return
+	}
+	err = query.Commit().Error
+	return
+}
+
+func (repo *Scele) CreateTokenCourse(model entity.TokenCourseModel) (err error) {
+	query := repo.db.Table("token_course").Begin().
+		Create(&model)
+	if err = query.Error; err != nil {
+		query.Rollback()
+		return
+	}
+	err = query.Commit().Error
+	return
+}
+
+func (repo *Scele) GetCourse(courseID uint, model entity.CoursesModel) (err error) {
+	query := repo.db.Table("courses").
+		Where("course_id = ?", courseID).
+		First(&model)
+
+	err = query.Error
 	return
 }
