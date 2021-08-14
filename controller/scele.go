@@ -48,11 +48,14 @@ func (ctrl *Scele) Login(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
 	}
+
 	// save user
 	err = ctrl.svc.CreateUser(token.Token, lineID, sceleUser.SceleID)
 	if err != nil {
 		if strings.Contains(err.Error(), "unique") {
 			err = errors.New("user already login")
+			ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			return
 		}
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
@@ -67,12 +70,11 @@ func (ctrl *Scele) Login(ctx *gin.Context) {
 
 	// save to db
 	for _, course := range courses {
-		courseDetail, err := ctrl.svc.CreateNewCourse(token.Token, sceleUser.SceleID, course)
+		_, err := ctrl.svc.CreateNewCourse(token.Token, sceleUser.SceleID, course)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 			return
 		}
-		fmt.Printf("course: %#v\n", courseDetail)
 	}
 
 	ctx.JSON(200, gin.H{"message": "good"})
