@@ -1,25 +1,29 @@
 package api
 
 import (
-	"log"
-	"net/http"
+	"fmt"
+	"os"
 
-	"go.mongodb.org/mongo-driver/mongo"
+	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 type Server struct {
-	Db *mongo.Client
+	router *gin.Engine
+	Db     *gorm.DB
 }
 
-func MakeServer(db *mongo.Client) Server {
+func MakeServer(db *gorm.DB) Server {
+	router := gin.Default()
 	server := Server{
-		Db: db,
+		Db:     db,
+		router: router,
 	}
 	return server
 }
 
-func (s *Server) RunServer(port string) {
-	if err := http.ListenAndServe(":"+port, nil); err != nil {
-		log.Fatal(err)
-	}
+func (s *Server) RunServer() {
+	s.SetupRouter()
+	serverString := fmt.Sprintf(":%s", os.Getenv("SERVER_PORT"))
+	s.router.Run(serverString)
 }

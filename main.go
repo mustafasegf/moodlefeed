@@ -1,37 +1,30 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"os"
-	"time"
 
 	"github.com/joho/godotenv"
 	"github.com/mustafasegf/scelefeed/api"
 	"github.com/mustafasegf/scelefeed/util"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 func main() {
 	godotenv.Load()
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-	mongoURI := fmt.Sprintf("mongodb://%s:%s@%s:27017/", os.Getenv("MONGO_INITDB_ROOT_USERNAME"), os.Getenv("MONGO_INITDB_ROOT_PASSWORD"), os.Getenv("MONGO_HOST"))
-	db, err := mongo.Connect(ctx, options.Client().ApplyURI(mongoURI))
+
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable", os.Getenv("DB_HOST"), os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_NAME"), os.Getenv("DB_PORT"))
+	db, err := gorm.Open(postgres.New(postgres.Config{
+		DSN: dsn,
+	}))
 	if err != nil {
-		log.Panic(err)
+		log.Fatal("canot load db: ", err)
 	}
 
 	util.SetLogger()
 	server := api.MakeServer(db)
-	server.SetupRouter()
-	server.RunServer(os.Getenv("SERVER_PORT"))
+	server.RunServer()
 
-	defer func() {
-		if err = db.Disconnect(context.Background()); err != nil {
-			panic(err)
-		}
-	}()
 }

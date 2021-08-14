@@ -16,6 +16,7 @@ func SetLogger() (err error) {
 	}
 
 	mw := io.MultiWriter(os.Stdout, logFile)
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	log.SetOutput(mw)
 	return
 }
