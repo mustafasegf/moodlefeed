@@ -1,0 +1,23 @@
+insert into message_type (created_at, updated_at, name)
+values
+(now(), now(), 'resource'),
+(now(), now(), 'assign'),
+(now(), now(), 'quiz'),
+(now(), now(), 'zoom'),
+(now(), now(), 'lesson'),
+(now(), now(), 'forum'),
+(now(), now(), 'label'),
+(now(), now(), 'url'),
+(now(), now(), 'feedback'),
+(now(), now(), 'folder'),
+(now(), now(), 'page'),
+(now(), now(), 'survey'),
+(now(), now(), 'scorm'),
+(now(), now(), 'wiki'),
+(now(), now(), 'data'),
+(now(), now(), 'imscp'),
+(now(), now(), 'book'),
+(now(), now(), 'glossary'),
+(now(), now(), 'lti'),
+(now(), now(), 'chat'),
+(now(), now(), 'choice');
