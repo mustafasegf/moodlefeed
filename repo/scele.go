@@ -48,6 +48,17 @@ func (repo *Scele) CreateTokenCourse(model entity.TokenCourseModel) (err error) 
 	return
 }
 
+func (repo *Scele) CreateUserSubscribe(model entity.UserSubscribeModel) (err error) {
+	query := repo.db.Table("user_subscribe").Begin().
+		Create(&model)
+	if err = query.Error; err != nil {
+		query.Rollback()
+		return
+	}
+	err = query.Commit().Error
+	return
+}
+
 func (repo *Scele) GetCourse(courseID uint, model entity.CoursesModel) (err error) {
 	query := repo.db.Table("courses").
 		Where("course_id = ?", courseID).

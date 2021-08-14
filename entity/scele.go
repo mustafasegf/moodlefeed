@@ -71,7 +71,7 @@ type TokenCourseModel struct {
 	Token    string `gorm:"column:token"`
 }
 
-type UserSubscribe struct {
+type UserSubscribeModel struct {
 	gorm.Model
 	UserId   uint `gorm:"column:user_id"`
 	TypeId   uint `gorm:"column:type_id"`
