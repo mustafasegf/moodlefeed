@@ -9,19 +9,20 @@ type Course struct {
 }
 
 type ContentsResource struct {
-	Type     string
-	FileName string
-	FileUrl  string
+	Type     string `json:"type"`
+	FileName string `json:"filename"`
+	FileUrl  string `json:"fileurl"`
 }
 type ModulesResource struct {
-	Id                  int    `json:"id"`
-	Url                 string `json:"url"`
-	Name                string `json:"name"`
-	Description         string `json:"description"`
-	Visible             int    `json:"visible"`
-	Uservisible         bool   `json:"uservisible"`
-	Visibleoncoursepage int    `json:"visibleoncoursepage"`
-	Modname             string `json:"modname"`
+	Id                  int                `json:"id"`
+	Url                 string             `json:"url"`
+	Name                string             `json:"name"`
+	Description         string             `json:"description"`
+	Visible             int                `json:"visible"`
+	Uservisible         bool               `json:"uservisible"`
+	Visibleoncoursepage int                `json:"visibleoncoursepage"`
+	Modname             string             `json:"modname"`
+	Contents            []ContentsResource `json:"contents"`
 }
 
 type CourseResource struct {

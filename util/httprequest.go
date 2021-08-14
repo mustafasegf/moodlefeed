@@ -47,8 +47,8 @@ func GetCourses(token string, userid int) (courses []entity.Course, err error) {
 	return
 }
 
-func GetCourseDetail(token string, courseID int) (resource []entity.ModulesResource, err error) {
-	resource = make([]entity.ModulesResource, 0)
+func GetCourseDetail(token string, courseID int) (resource []entity.CourseResource, err error) {
+	resource = make([]entity.CourseResource, 0)
 	err = RequestScele(token, "core_course_get_contents", gin.H{"courseid": courseID}, &resource)
 	return
 }

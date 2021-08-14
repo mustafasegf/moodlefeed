@@ -16,7 +16,7 @@ CREATE TABLE "courses" (
   "short_name" varchar,
   "long_name" varchar,
   "resource" json,
-  "course_id" int NOT NULL,
+  "course_id" int UNIQUE NOT NULL,
   "user_token" varchar(64) NOT NULL
 );
 

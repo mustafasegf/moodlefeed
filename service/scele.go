@@ -29,21 +29,19 @@ func (svc *Scele) CreateUser(token, lineID string, sceleID int) (err error) {
 }
 
 func (svc *Scele) CreateNewCourse(token string, userID int, course entity.Course) (data entity.CoursesModel, err error) {
-	var courseDetail []entity.ModulesResource
+	var courseDetail []entity.CourseResource
 	data = entity.CoursesModel{}
 	err = svc.repo.GetCourse(uint(course.Id), data)
 	if err != gorm.ErrRecordNotFound && err != nil {
 		return
 	} else if err == gorm.ErrRecordNotFound {
+		if courseDetail, err = util.GetCourseDetail(token, course.Id); err != nil {
+			return
+		}
+		if err = svc.CreateCourse(token, userID, course, courseDetail); err != nil {
+			return
+		}
 		if err = svc.CreateTokenCourse(token, course.Id); err != nil {
-			return
-		}
-		courseDetail, err = util.GetCourseDetail(token, course.Id)
-		if err != nil {
-			return
-		}
-		err = svc.CreateCourse(token, userID, course, courseDetail)
-		if err != nil {
 			return
 		}
 		err = svc.DefaultSubscribe(userID, course.Id)
@@ -51,7 +49,7 @@ func (svc *Scele) CreateNewCourse(token string, userID int, course entity.Course
 	return
 }
 
-func (svc *Scele) CreateCourse(token string, userID int, course entity.Course, courseDetail []entity.ModulesResource) (err error) {
+func (svc *Scele) CreateCourse(token string, userID int, course entity.Course, courseDetail []entity.CourseResource) (err error) {
 	courseModel := entity.CoursesModel{
 		CourseID:  uint(course.Id),
 		ShortName: course.ShortName,
