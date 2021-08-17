@@ -2,9 +2,9 @@ package service
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/mustafasegf/scelefeed/core"
 	"github.com/mustafasegf/scelefeed/entity"
 	"github.com/mustafasegf/scelefeed/repo"
-	"github.com/mustafasegf/scelefeed/util"
 	"gorm.io/gorm"
 )
 
@@ -35,7 +35,7 @@ func (svc *Scele) CreateNewCourse(token string, userID int, course entity.Course
 	if err != gorm.ErrRecordNotFound && err != nil {
 		return
 	} else if err == gorm.ErrRecordNotFound {
-		if courseDetail, err = util.GetCourseDetail(token, course.Id); err != nil {
+		if courseDetail, err = core.GetCourseDetail(token, course.Id); err != nil {
 			return
 		}
 		if err = svc.CreateCourse(token, userID, course, courseDetail); err != nil {
