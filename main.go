@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
+	"github.com/line/line-bot-sdk-go/v7/linebot"
 	"github.com/mustafasegf/scelefeed/api"
 	"github.com/mustafasegf/scelefeed/util"
 	"gorm.io/driver/postgres"
@@ -24,6 +25,11 @@ func main() {
 		log.Fatal("canot load db: ", err)
 	}
 
-	server := api.MakeServer(db)
+	bot, err := linebot.New(os.Getenv("LINE_SECRET"), os.Getenv("LINE_TOKEN"))
+	if err != nil {
+		log.Panic(err)
+	}
+
+	server := api.MakeServer(db, bot)
 	server.RunServer()
 }
