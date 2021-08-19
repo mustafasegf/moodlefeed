@@ -8,7 +8,6 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/line/line-bot-sdk-go/v7/linebot"
 	"github.com/mustafasegf/scelefeed/api"
-	"github.com/mustafasegf/scelefeed/core"
 	"github.com/mustafasegf/scelefeed/util"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -31,7 +30,6 @@ func main() {
 		log.Panic(err)
 	}
 
-	go core.RunSchedule()
 	server := api.MakeServer(db, bot)
 	server.RunServer()
 }

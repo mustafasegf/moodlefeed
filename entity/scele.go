@@ -1,6 +1,13 @@
 package entity
 
-import "gorm.io/gorm"
+import (
+	"database/sql/driver"
+	"encoding/json"
+	"errors"
+	"fmt"
+
+	"gorm.io/gorm"
+)
 
 type Course struct {
 	Id        int    `json:"id"`
@@ -55,12 +62,36 @@ type UsersModel struct {
 
 type CoursesModel struct {
 	gorm.Model
-	CourseID  uint        `gorm:"column:course_id"`
-	ShortName string      `gorm:"column:short_name"`
-	LongName  string      `gorm:"column:long_name"`
-	UserToken string      `gorm:"column:user_token"`
-	Resource  interface{} `gorm:"column:resource;type:json"`
+	CourseID  uint     `gorm:"column:course_id"`
+	ShortName string   `gorm:"column:short_name"`
+	LongName  string   `gorm:"column:long_name"`
+	UserToken string   `gorm:"column:user_token"`
+	Resource  Resource `gorm:"column:resource;type:json" json:"resouce"`
 }
+
+type Resource struct {
+	Resource []CourseResource `json:"resource"`
+}
+
+func (j *Resource) Scan(value interface{}) error {
+	bytes, ok := value.([]byte)
+	if !ok {
+		return errors.New(fmt.Sprint("Failed to unmarshal JSONB value:", value))
+	}
+
+	result := Resource{}
+	err := json.Unmarshal(bytes, &result)
+	*j = Resource(result)
+	return err
+}
+
+func (j *Resource) Value() (driver.Value, error) {
+	if j == nil {
+		return nil, nil
+	}
+	return &j, nil
+}
+
 type MessageTypeModel struct {
 	gorm.Model
 	Name string `gorm:"column:name"`

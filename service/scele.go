@@ -1,9 +1,8 @@
 package service
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/mustafasegf/scelefeed/core"
 	"github.com/mustafasegf/scelefeed/entity"
+	"github.com/mustafasegf/scelefeed/httprequest"
 	"github.com/mustafasegf/scelefeed/repo"
 	"gorm.io/gorm"
 )
@@ -35,7 +34,7 @@ func (svc *Scele) CreateNewCourse(token string, userID int, course entity.Course
 	if err != gorm.ErrRecordNotFound && err != nil {
 		return
 	} else if err == gorm.ErrRecordNotFound {
-		if courseDetail, err = core.GetCourseDetail(token, course.Id); err != nil {
+		if courseDetail, err = httprequest.GetCourseDetail(token, course.Id); err != nil {
 			return
 		}
 		if err = svc.CreateCourse(token, userID, course, courseDetail); err != nil {
@@ -55,7 +54,7 @@ func (svc *Scele) CreateCourse(token string, userID int, course entity.Course, c
 		ShortName: course.ShortName,
 		LongName:  course.FullName,
 		UserToken: token,
-		Resource:  gin.H{"resource": courseDetail},
+		Resource:  entity.Resource{Resource: courseDetail},
 	}
 	err = svc.repo.CreateCourse(courseModel)
 	return
@@ -83,6 +82,13 @@ func (svc *Scele) DefaultSubscribe(userID, CourseID int) (err error) {
 			return
 		}
 	}
+
+	return
+}
+
+func (svc *Scele) GetAllCourse() (courses []entity.CoursesModel, err error) {
+	courses = []entity.CoursesModel{}
+	svc.repo.GetAllCourse(&courses)
 
 	return
 }

@@ -67,3 +67,17 @@ func (repo *Scele) GetCourse(courseID uint, model entity.CoursesModel) (err erro
 	err = query.Error
 	return
 }
+
+func (repo *Scele) GetAllCourse(model *[]entity.CoursesModel) (err error) {
+	fields := []string{
+		"long_name",
+		"user_token",
+		"resource",
+	}
+	query := repo.db.Table("courses").
+		Select(fields).
+		Find(model)
+
+	err = query.Error
+	return
+}

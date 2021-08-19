@@ -7,8 +7,8 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/mustafasegf/scelefeed/core"
 	"github.com/mustafasegf/scelefeed/entity"
+	"github.com/mustafasegf/scelefeed/httprequest"
 	"github.com/mustafasegf/scelefeed/service"
 )
 
@@ -36,14 +36,14 @@ func (ctrl *Scele) Login(ctx *gin.Context) {
 		return
 	}
 	// login
-	token, err := core.LoginScele(req.Username, req.Password)
+	token, err := httprequest.LoginScele(req.Username, req.Password)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 
 	// get id
-	sceleUser, err := core.GetSceleId(token.Token)
+	sceleUser, err := httprequest.GetSceleId(token.Token)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
@@ -62,7 +62,7 @@ func (ctrl *Scele) Login(ctx *gin.Context) {
 	}
 
 	// get all course
-	courses, err := core.GetCourses(token.Token, sceleUser.SceleID)
+	courses, err := httprequest.GetCourses(token.Token, sceleUser.SceleID)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return

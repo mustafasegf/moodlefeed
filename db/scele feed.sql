@@ -15,7 +15,7 @@ CREATE TABLE "courses" (
   "deleted_at" timestamp,
   "short_name" varchar,
   "long_name" varchar,
-  "resource" json,
+  "resource" jsonb,
   "course_id" int UNIQUE NOT NULL,
   "user_token" varchar(64) NOT NULL
 );
