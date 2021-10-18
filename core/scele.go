@@ -41,14 +41,15 @@ func (s *Schedule) GetCourse() {
 	for _, course := range courses {
 		newCourseResource, _ := httprequest.GetCourseDetail(course.UserToken, int(course.CourseID))
 		newCourse := entity.Resource{Resource: newCourseResource}
+		if course.CourseID == 702 {
+			fmt.Printf("%v\n", newCourse)
+		}
 		eq := cmp.Equal(newCourse, course.Resource)
 		if !eq {
-			go func () {
-				err := s.svc.UpdateCourseResource(course.CourseID, newCourse)
-				if err != nil {
-					log.Printf("error updating course %s with course id %d. error code : %v", course.LongName, course.CourseID, err)
-				}
-			}()
+			err := s.svc.UpdateCourseResource(course.CourseID, newCourse)
+			if err != nil {
+				log.Printf("error updating course %s with course id %d. error code : %v", course.LongName, course.CourseID, err)
+			}
 		}
 	}
 }

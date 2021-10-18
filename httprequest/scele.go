@@ -47,8 +47,23 @@ func GetCourses(token string, userid int) (courses []entity.Course, err error) {
 	return
 }
 
-func GetCourseDetail(token string, courseID int) (resource []entity.CourseResource, err error) {
-	resource = make([]entity.CourseResource, 0)
+func GetCourseDetail(token string, courseID int) (sanitizedResources []entity.CourseResource, err error) {
+	resource := make([]entity.CourseResource, 0)
 	err = RequestScele(token, "core_course_get_contents", gin.H{"courseid": courseID}, &resource)
+
+	sanitizedResources = make([]entity.CourseResource, 0, len(resource))
+	for _, r := range resource {
+		if r.Uservisible && r.Visible == 1 {
+			sanitizedModulesResource := make([]entity.ModulesResource, 0, len(r.Modules))
+
+			for _, m := range r.Modules {
+				if m.Uservisible && m.Visible == 1 && m.Visibleoncoursepage == 1 {
+					sanitizedModulesResource = append(sanitizedModulesResource, m)
+				}
+			}
+			r.Modules = sanitizedModulesResource
+			sanitizedResources = append(sanitizedResources, r)
+		}
+	}
 	return
 }
