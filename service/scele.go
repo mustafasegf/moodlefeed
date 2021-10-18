@@ -92,3 +92,8 @@ func (svc *Scele) GetAllCourse() (courses []entity.CoursesModel, err error) {
 
 	return
 }
+
+func (svc *Scele) UpdateCourseResource(courseId uint, resource entity.Resource) (err error) {
+	err = svc.repo.UpdateCourseResource(courseId, resource)
+	return
+}

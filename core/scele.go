@@ -1,10 +1,13 @@
 package core
 
 import (
-	"encoding/json"
 	"fmt"
+	"log"
 	"time"
 
+	"github.com/google/go-cmp/cmp"
+	"github.com/mustafasegf/scelefeed/entity"
+	"github.com/mustafasegf/scelefeed/httprequest"
 	"github.com/mustafasegf/scelefeed/service"
 )
 
@@ -26,15 +29,26 @@ func (s *Schedule) RunSchedule() {
 		select {
 		case <-ticker.C:
 			fmt.Println("1 minute occured")
+			s.GetCourse()
 		}
 	}
 }
 
 func (s *Schedule) GetCourse() {
+
 	courses, _ := s.svc.GetAllCourse()
 
-	b, _ := json.MarshalIndent(courses[0].LongName, "", "  ")
-	fmt.Printf("%s\n", b)
+	for _, course := range courses {
+		newCourseResource, _ := httprequest.GetCourseDetail(course.UserToken, int(course.CourseID))
+		newCourse := entity.Resource{Resource: newCourseResource}
+		eq := cmp.Equal(newCourse, course.Resource)
+		if !eq {
+			go func () {
+				err := s.svc.UpdateCourseResource(course.CourseID, newCourse)
+				if err != nil {
+					log.Printf("error updating course %s with course id %d. error code : %v", course.LongName, course.CourseID, err)
+				}
+			}()
+		}
+	}
 }
-
-// add check different

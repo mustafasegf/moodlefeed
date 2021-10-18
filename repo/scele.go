@@ -70,14 +70,27 @@ func (repo *Scele) GetCourse(courseID uint, model entity.CoursesModel) (err erro
 
 func (repo *Scele) GetAllCourse(model *[]entity.CoursesModel) (err error) {
 	fields := []string{
+		"course_id",
 		"long_name",
 		"user_token",
 		"resource",
 	}
 	query := repo.db.Table("courses").
 		Select(fields).
+		Order("course_id desc").
 		Find(model)
 
 	err = query.Error
+	return
+}
+
+func (repo *Scele) UpdateCourseResource(courseID uint, model entity.Resource) (err error) {
+	query := repo.db.Table("courses").Begin().
+		Where("course_id = ?", courseID).Update("resource", &model)
+	if err = query.Error; err != nil {
+		query.Rollback()
+		return
+	}
+	err = query.Commit().Error
 	return
 }
