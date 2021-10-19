@@ -84,6 +84,19 @@ func (repo *Scele) GetAllCourse(model *[]entity.CoursesModel) (err error) {
 	return
 }
 
+func (repo *Scele) GetIdLineFromCourse(courseId uint, model *[]entity.UsersModel) (err error) {
+	fields := []string{
+		"line_id",
+	}
+	query := repo.db.Table("users").
+		Select(fields).
+		Where("scele_id in (select user_id from user_subscribe where course_id=?)", courseId).
+		Find(model)
+
+	err = query.Error
+	return
+}
+
 func (repo *Scele) UpdateCourseResource(courseID uint, model entity.Resource) (err error) {
 	query := repo.db.Table("courses").Begin().
 		Where("course_id = ?", courseID).Update("resource", &model)

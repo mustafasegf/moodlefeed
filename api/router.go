@@ -15,7 +15,7 @@ func (s *Server) SetupRouter() {
 	sceleService := service.NewSceleService(sceleRepo)
 	sceleController := controller.NewSceleController(sceleService)
 
-	schedule := core.NewSchedule(sceleService)
+	schedule := core.NewSchedule(sceleService, s.bot)
 	go schedule.RunSchedule()
 
 	lineService := service.NewLineService()

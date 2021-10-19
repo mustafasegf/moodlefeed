@@ -97,3 +97,9 @@ func (svc *Scele) UpdateCourseResource(courseId uint, resource entity.Resource) 
 	err = svc.repo.UpdateCourseResource(courseId, resource)
 	return
 }
+
+func (svc *Scele) GetIdLineFromCourse(courseId uint) (user []entity.UsersModel, err error) {
+	user = []entity.UsersModel{}
+	err = svc.repo.GetIdLineFromCourse(courseId, &user)
+	return
+}
