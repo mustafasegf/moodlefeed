@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/k3a/html2text"
 	"github.com/line/line-bot-sdk-go/v7/linebot"
 	"github.com/mustafasegf/scelefeed/entity"
 	"github.com/mustafasegf/scelefeed/httprequest"
@@ -44,9 +45,6 @@ func (s *Schedule) GetCourse() {
 	courses, _ := s.svc.GetAllCourse()
 
 	for _, course := range courses {
-		// if course.CourseID != 3197 {
-		// 	continue
-		// }
 		newCourseResource, _ := httprequest.GetCourseDetail(course.UserToken, int(course.CourseID))
 		newCourse := entity.Resource{Resource: newCourseResource}
 		var r util.DiffReporter
@@ -56,7 +54,7 @@ func (s *Schedule) GetCourse() {
 			msg := make([]string, 0, len(diff))
 			for _, index := range diff {
 				res := newCourse.Resource[index.Resource].Modules[index.Modules]
-				tmp := fmt.Sprintf("%s\n%s\n%s\n\n", res.Name, res.Description, res.Url)
+				tmp := fmt.Sprintf("%s\n%s\n%s\n\n", res.Name, html2text.HTML2Text(res.Description), res.Url)
 				fmt.Println(tmp)
 				msg = append(msg, tmp)
 			}
