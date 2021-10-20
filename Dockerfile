@@ -10,6 +10,6 @@ FROM alpine:3.13
 WORKDIR /app
 COPY --from=builder /build/main .
 COPY .env .
-
+COPY templates templates
 EXPOSE 8084
 CMD [ "/app/main" ]
