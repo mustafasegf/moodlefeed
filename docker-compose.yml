@@ -13,7 +13,7 @@ services:
     networks:
       - scelefeed
     ports: 
-      - "5433:5432"
+      - "${DB_PORT}:5432"
 
 volumes:
   db-data:

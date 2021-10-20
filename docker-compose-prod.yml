@@ -13,7 +13,7 @@ services:
     networks:
       - scelefeed
     ports: 
-      - "5433:5432"
+      - "${DB_PORT}:5432"
 
   server:
     container_name: server-scelefeed
@@ -26,9 +26,11 @@ services:
       - db
     environment:
       - DB_HOST=db
-      - DB_PORT=5432
+      - DB_PORT=${DB_PORT}
     networks:
       - scelefeed
+      ports: 
+      - "${SERVER_PORT}:${SERVER_PORT}"
     command: ["/app/main"]
 
 volumes:
