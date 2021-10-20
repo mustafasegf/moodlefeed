@@ -22,6 +22,10 @@ func NewSceleController(svc *service.Scele) *Scele {
 	}
 }
 
+func (ctrl *Scele) Index(ctx *gin.Context) {
+	ctx.HTML(http.StatusOK, "index.html", "")
+}
+
 func (ctrl *Scele) Login(ctx *gin.Context) {
 	req := entity.LoginRequest{}
 	err := ctx.BindJSON(&req)
