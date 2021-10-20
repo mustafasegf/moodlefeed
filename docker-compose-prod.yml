@@ -23,7 +23,7 @@ services:
     ports:
       - "${SERVER_PORT}:${SERVER_PORT}"
     depends_on:
-      - mongo
+      - db
     environment:
       - DB_HOST=db
       - DB_PORT=5432

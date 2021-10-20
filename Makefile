@@ -6,3 +6,6 @@ watch:
 
 build:
 	go build -o ./bin/main main.go
+
+up:
+	docker-compose -f docker-compose-prod.yml up
