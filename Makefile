@@ -10,5 +10,8 @@ build:
 up:
 	docker-compose -f docker-compose-prod.yml up
 
+upb:
+	docker-compose -f docker-compose-prod.yml up --build
+
 down:
 	docker-compose -f docker-compose-prod.yml down
