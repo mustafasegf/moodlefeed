@@ -22,7 +22,9 @@
           method: "POST",
           body: JSON.stringify(data),
         });
-        console.log(await response.json())
+        const resData = await response.json()
+        console.log(resData)
+        document.getElementById("res").innerHTML = resData.message
       };
     </script>
     <title>SceleFeed</title>
@@ -51,6 +53,8 @@
           <br />
           <button type="submit" class="btn btn-primary">Submit</button>
         </form>
+        <br />
+        <p id="res"></p>
       </div>
     </div>
   </body>
