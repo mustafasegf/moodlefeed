@@ -29,7 +29,7 @@ services:
       - DB_PORT=${DB_PORT}
     networks:
       - scelefeed
-      ports: 
+    ports: 
       - "${SERVER_PORT}:${SERVER_PORT}"
     command: ["/app/main"]
 
