@@ -45,8 +45,6 @@ func (ctrl *Line) LineCallback(w http.ResponseWriter, req *http.Request) {
 					if _, err = ctrl.bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(res)).Do(); err != nil {
 						log.Print(err)
 					}
-				case "/update":
-
 				default:
 					res := message.Text
 					if _, err = ctrl.bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(res)).Do(); err != nil {
