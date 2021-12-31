@@ -1,13 +1,16 @@
 package entity
 
 import (
-	"database/sql/driver"
-	"encoding/json"
-	"errors"
-	"fmt"
-
-	"gorm.io/gorm"
+	"database/sql"
+	"time"
 )
+
+type Default struct {
+	ID        uint
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt sql.NullTime
+}
 
 type Course struct {
 	Id        int    `json:"id"`
@@ -54,58 +57,58 @@ type SceleUser struct {
 }
 
 type UsersModel struct {
-	gorm.Model
-	Token   string `gorm:"column:token"`
-	LineId  string `gorm:"column:line_id"`
-	SceleID int    `gorm:"column:scele_id"`
+	Default
+	Token   string
+	LineId  string
+	SceleID int
 }
 
 type CoursesModel struct {
-	gorm.Model
-	CourseID  uint     `gorm:"column:course_id"`
-	ShortName string   `gorm:"column:short_name"`
-	LongName  string   `gorm:"column:long_name"`
-	UserToken string   `gorm:"column:user_token"`
-	Resource  Resource `gorm:"column:resource;type:json" json:"resouce"`
+	Default
+	CourseID  uint
+	ShortName string
+	LongName  string
+	UserToken string
+	Resource  Resource
 }
 
 type Resource struct {
 	Resource []CourseResource `json:"resource"`
 }
 
-func (j *Resource) Scan(value interface{}) error {
-	bytes, ok := value.([]byte)
-	if !ok {
-		return errors.New(fmt.Sprint("Failed to unmarshal JSONB value:", value))
-	}
+// func (j *Resource) Scan(value interface{}) error {
+// 	bytes, ok := value.([]byte)
+// 	if !ok {
+// 		return errors.New(fmt.Sprint("Failed to unmarshal JSONB value:", value))
+// 	}
 
-	result := Resource{}
-	err := json.Unmarshal(bytes, &result)
-	*j = Resource(result)
-	return err
-}
+// 	result := Resource{}
+// 	err := json.Unmarshal(bytes, &result)
+// 	*j = Resource(result)
+// 	return err
+// }
 
-func (j *Resource) Value() (driver.Value, error) {
-	if j == nil {
-		return nil, nil
-	}
-	return &j, nil
-}
+// func (j *Resource) Value() (driver.Value, error) {
+// 	if j == nil {
+// 		return nil, nil
+// 	}
+// 	return &j, nil
+// }
 
 type MessageTypeModel struct {
-	gorm.Model
-	Name string `gorm:"column:name"`
+	Default
+	Name string
 }
 
 type TokenCourseModel struct {
-	gorm.Model
-	CourseID uint   `gorm:"column:course_id"`
-	Token    string `gorm:"column:token"`
+	Default
+	CourseID uint
+	Token    string
 }
 
 type UserSubscribeModel struct {
-	gorm.Model
-	UserId   uint `gorm:"column:user_id"`
-	TypeId   uint `gorm:"column:type_id"`
-	CourseId uint `gorm:"column:course_id"`
+	Default
+	UserId   uint
+	TypeId   uint
+	CourseId uint
 }

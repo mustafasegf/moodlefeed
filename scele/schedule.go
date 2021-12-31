@@ -1,4 +1,4 @@
-package core
+package scele
 
 import (
 	"fmt"
@@ -11,17 +11,15 @@ import (
 	"github.com/k3a/html2text"
 	"github.com/line/line-bot-sdk-go/v7/linebot"
 	"github.com/mustafasegf/scelefeed/entity"
-	"github.com/mustafasegf/scelefeed/httprequest"
-	"github.com/mustafasegf/scelefeed/service"
 	"github.com/mustafasegf/scelefeed/util"
 )
 
 type Schedule struct {
-	svc *service.Scele
+	svc *Service
 	bot *linebot.Client
 }
 
-func NewSchedule(svc *service.Scele, bot *linebot.Client) *Schedule {
+func NewSchedule(svc *Service, bot *linebot.Client) *Schedule {
 	return &Schedule{
 		svc: svc,
 		bot: bot,
@@ -45,6 +43,7 @@ func (s *Schedule) RunSchedule() {
 func (s *Schedule) GetCourse() {
 
 	courses, _ := s.svc.GetAllCourse()
+	httprequest := HttpRequest{}
 
 	for _, course := range courses {
 		go func(c entity.CoursesModel) {

@@ -15,6 +15,22 @@ services:
     ports: 
       - "${DB_PORT}:5432"
 
+  server:
+    container_name: server-scelefeed
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+    networks:
+      - scelefeed
+    command: ["/app/main"]
+
 volumes:
   db-data:
     driver: local

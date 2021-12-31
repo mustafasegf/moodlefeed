@@ -12,15 +12,15 @@ import (
 type Server struct {
 	router *gin.Engine
 	Db     *gorm.DB
-	bot    *linebot.Client
+	line   *linebot.Client
 }
 
-func MakeServer(db *gorm.DB, bot *linebot.Client) Server {
+func MakeServer(db *gorm.DB, line *linebot.Client) Server {
 	router := gin.Default()
 	server := Server{
 		Db:     db,
 		router: router,
-		bot:    bot,
+		line:   line,
 	}
 	return server
 }

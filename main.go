@@ -22,7 +22,7 @@ func main() {
 		DSN: dsn,
 	}))
 	if err != nil {
-		log.Fatal("canot load db: ", err)
+		log.Fatalln(err)
 	}
 
 	bot, err := linebot.New(os.Getenv("LINE_SECRET"), os.Getenv("LINE_TOKEN"))

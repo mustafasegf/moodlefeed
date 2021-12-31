@@ -1,23 +1,27 @@
-package controller
+package client
 
 import (
+	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/line/line-bot-sdk-go/v7/linebot"
-	"github.com/mustafasegf/scelefeed/service"
 )
 
 type Line struct {
-	svc *service.Line
 	bot *linebot.Client
 }
 
-func NewLineController(svc *service.Line, bot *linebot.Client) *Line {
+func NewLineController(bot *linebot.Client) *Line {
 	return &Line{
-		svc: svc,
 		bot: bot,
 	}
+}
+
+func (ctrl *Line) GetLoginUrl(lineID string) (url string) {
+	url = fmt.Sprintf("%s?id=%s", os.Getenv("SERVER_HOST"), lineID)
+	return
 }
 
 func (ctrl *Line) LineCallback(w http.ResponseWriter, req *http.Request) {
@@ -37,10 +41,12 @@ func (ctrl *Line) LineCallback(w http.ResponseWriter, req *http.Request) {
 			case *linebot.TextMessage:
 				switch message.Text {
 				case "/login":
-					res := ctrl.svc.GetLoginUrl(event.Source.UserID)
+					res := ctrl.GetLoginUrl(event.Source.UserID)
 					if _, err = ctrl.bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(res)).Do(); err != nil {
 						log.Print(err)
 					}
+				case "/update":
+
 				default:
 					res := message.Text
 					if _, err = ctrl.bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(res)).Do(); err != nil {

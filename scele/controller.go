@@ -1,4 +1,4 @@
-package controller
+package scele
 
 import (
 	"errors"
@@ -8,27 +8,26 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/mustafasegf/scelefeed/entity"
-	"github.com/mustafasegf/scelefeed/httprequest"
-	"github.com/mustafasegf/scelefeed/service"
 )
 
-type Scele struct {
-	svc *service.Scele
+type Controller struct {
+	svc *Service
 }
 
-func NewSceleController(svc *service.Scele) *Scele {
-	return &Scele{
+func NewController(svc *Service) *Controller {
+	return &Controller{
 		svc: svc,
 	}
 }
 
-func (ctrl *Scele) Index(ctx *gin.Context) {
+func (ctrl *Controller) Index(ctx *gin.Context) {
 	ctx.HTML(http.StatusOK, "index.html", "")
 }
 
-func (ctrl *Scele) Login(ctx *gin.Context) {
+func (ctrl *Controller) Login(ctx *gin.Context) {
 	req := entity.LoginRequest{}
 	err := ctx.BindJSON(&req)
+	httprequest := HttpRequest{}
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
@@ -84,6 +83,6 @@ func (ctrl *Scele) Login(ctx *gin.Context) {
 	ctx.JSON(200, gin.H{"message": "good"})
 }
 
-func (ctrl *Scele) Home(w http.ResponseWriter, req *http.Request) {
+func (ctrl *Controller) Home(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprintf(w, "Welcome to the HomePage!")
 }
