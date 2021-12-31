@@ -25,6 +25,7 @@
         for (let key of formData.keys()) {
           data[key] = formData.get(key);
         }
+        document.getElementById("res").innerHTML = "loading...";
         const response = await fetch(window.location.href, {
           method: "POST",
           body: JSON.stringify(data),
