@@ -50,8 +50,10 @@ func (ctrl *Controller) Login(ctx *gin.Context) {
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
+	} else if sceleUser.SceleID == 0 {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Wrong password"})
+		return
 	}
-
 	// save user
 	err = ctrl.svc.CreateUser(token.Token, lineID, sceleUser.SceleID)
 	if err != nil {

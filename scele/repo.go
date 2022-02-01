@@ -107,3 +107,17 @@ func (repo *Repo) UpdateCourseResource(courseID uint, model entity.Resource) (er
 	err = query.Commit().Error
 	return
 }
+
+func (repo *Repo) GetCoursesNameByToken(token string, model *[]entity.Course) (err error) {
+	fields := []string{
+		"short_name",
+	}
+
+	query := repo.db.Table("courses").
+		Select(fields).
+		Where("user_token = ?", token).
+		Find(model)
+
+	err = query.Error
+	return
+}

@@ -47,16 +47,16 @@ CREATE TABLE "user_subscribe" (
   "course_id" int NOT NULL
 );
 
-ALTER TABLE "courses" ADD FOREIGN KEY ("user_token") REFERENCES "users" ("token");
+ALTER TABLE "courses" ADD FOREIGN KEY ("user_token") REFERENCES "users" ("token") ON DELETE CASCADE;
 
-ALTER TABLE "token_course" ADD FOREIGN KEY ("token") REFERENCES "users" ("token");
+ALTER TABLE "token_course" ADD FOREIGN KEY ("token") REFERENCES "users" ("token") ON DELETE CASCADE;
 
-ALTER TABLE "token_course" ADD FOREIGN KEY ("course_id") REFERENCES "courses" ("course_id");
+ALTER TABLE "token_course" ADD FOREIGN KEY ("course_id") REFERENCES "courses" ("course_id") ON DELETE CASCADE;
 
-ALTER TABLE "user_subscribe" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("scele_id");
+ALTER TABLE "user_subscribe" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("scele_id") ON DELETE CASCADE;
 
-ALTER TABLE "user_subscribe" ADD FOREIGN KEY ("type_id") REFERENCES "message_type" ("id");
+ALTER TABLE "user_subscribe" ADD FOREIGN KEY ("type_id") REFERENCES "message_type" ("id") ON DELETE CASCADE;
 
-ALTER TABLE "user_subscribe" ADD FOREIGN KEY ("course_id") REFERENCES "courses" ("course_id");
+ALTER TABLE "user_subscribe" ADD FOREIGN KEY ("course_id") REFERENCES "courses" ("course_id") ON DELETE CASCADE;
 
 CREATE INDEX "course_type" ON "user_subscribe" ("course_id", "type_id");

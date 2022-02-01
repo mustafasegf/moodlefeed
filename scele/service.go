@@ -1,12 +1,21 @@
 package scele
 
 import (
+	"fmt"
+
 	"github.com/mustafasegf/scelefeed/entity"
 	"gorm.io/gorm"
 )
 
 type Service struct {
 	repo *Repo
+}
+
+var httprequest *HttpRequest
+
+// i know this is kinda ugly. will refactor later
+func init() {
+	httprequest = &HttpRequest{}
 }
 
 func NewService(repo *Repo) *Service {
@@ -100,5 +109,58 @@ func (svc *Service) UpdateCourseResource(courseId uint, resource entity.Resource
 func (svc *Service) GetIdLineFromCourse(courseId uint) (user []entity.UsersModel, err error) {
 	user = []entity.UsersModel{}
 	err = svc.repo.GetIdLineFromCourse(courseId, &user)
+	return
+}
+
+func (svc *Service) GetCoursesNameByToken(token string) (courses []entity.Course, err error) {
+	courses = []entity.Course{}
+	err = svc.repo.GetCoursesNameByToken(token, &courses)
+	return
+}
+
+func (svc *Service) UpdateUserCourse(token string, sceleID int) (err error) {
+
+	// get all course
+	newCourses, err := httprequest.GetCourses(token, sceleID)
+	if err != nil {
+		return
+	}
+
+	newCourseSet := make(map[string]entity.Course)
+	for _, course := range newCourses {
+		newCourseSet[course.ShortName] = course
+	}
+
+	oldCourses, err := svc.GetCoursesNameByToken(token)
+	if err != nil {
+		return err
+	}
+
+	oldCoursesSet := make(map[string]entity.Course)
+
+	createdCourse := make([]string, 0)
+	deletedCourse := make([]string, 0)
+
+	for _, course := range oldCourses {
+		oldCoursesSet[course.ShortName] = course
+		if _, exist := newCourseSet[course.ShortName]; !exist {
+			deletedCourse = append(deletedCourse, course.ShortName)
+		}
+	}
+
+	for _, course := range newCourses {
+		if _, exist := oldCoursesSet[course.ShortName]; !exist {
+			createdCourse = append(createdCourse, course.ShortName)
+		}
+	}
+
+	fmt.Printf("%#v\n%#v\n", createdCourse, deletedCourse)
+	for _, course := range createdCourse {
+		_, err = svc.CreateNewCourse(token, sceleID, newCourseSet[course])
+		if err != nil {
+			fmt.Printf("err:%v\n", err)
+		}
+	}
+	//TODO: added delete course
 	return
 }
