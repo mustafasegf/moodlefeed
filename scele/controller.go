@@ -20,8 +20,12 @@ func NewController(svc *Service) *Controller {
 	}
 }
 
-func (ctrl *Controller) Index(ctx *gin.Context) {
+func (ctrl *Controller) IndexPage(ctx *gin.Context) {
 	ctx.HTML(http.StatusOK, "index.html", "")
+}
+
+func (ctrl *Controller) LoginPage(ctx *gin.Context) {
+	ctx.HTML(http.StatusOK, "login.html", "")
 }
 
 func (ctrl *Controller) Login(ctx *gin.Context) {

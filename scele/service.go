@@ -118,7 +118,7 @@ func (svc *Service) GetCoursesNameByToken(token string) (courses []entity.Course
 	return
 }
 
-func (svc *Service) UpdateUserCourse(token string, sceleID int) (err error) {
+func (svc *Service) UpdateUserCourse(token string, sceleID int) (res string, err error) {
 
 	// get all course
 	newCourses, err := httprequest.GetCourses(token, sceleID)
@@ -133,7 +133,7 @@ func (svc *Service) UpdateUserCourse(token string, sceleID int) (err error) {
 
 	oldCourses, err := svc.GetCoursesNameByToken(token)
 	if err != nil {
-		return err
+		return
 	}
 
 	oldCoursesSet := make(map[string]entity.Course)
@@ -154,7 +154,6 @@ func (svc *Service) UpdateUserCourse(token string, sceleID int) (err error) {
 		}
 	}
 
-	fmt.Printf("%#v\n%#v\n", createdCourse, deletedCourse)
 	for _, course := range createdCourse {
 		_, err = svc.CreateNewCourse(token, sceleID, newCourseSet[course])
 		if err != nil {

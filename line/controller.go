@@ -101,7 +101,9 @@ func (ctrl *Controller) LineCallback(w http.ResponseWriter, req *http.Request) {
 						log.Print(err)
 					}
 				case "/help":
-					res := "/login\n/update\n/list"
+					res := `/login
+/update
+/course"`
 					if _, err = ctrl.Bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(res)).Do(); err != nil {
 						log.Print(err)
 					}
