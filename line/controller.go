@@ -79,6 +79,32 @@ func (ctrl *Controller) LineCallback(w http.ResponseWriter, req *http.Request) {
 					if _, err = ctrl.Bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(fmt.Sprintf("%v", newCourse))).Do(); err != nil {
 						log.Print(err)
 					}
+				case "/courses":
+					res := ""
+
+					user, err := ctrl.Svc.GetUserFromLineID(event.Source.UserID)
+					if err != nil {
+						log.Println(err)
+						continue
+					}
+
+					courses, err := ctrl.SceleSvc.GetCoursesNameByToken(user.Token)
+					if err != nil {
+						res = err.Error()
+					} else {
+						for _, course := range courses {
+							res += course.ShortName + "\n"
+						}
+					}
+
+					if _, err = ctrl.Bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(res)).Do(); err != nil {
+						log.Print(err)
+					}
+				case "/help":
+					res := "/login\n/update\n/list"
+					if _, err = ctrl.Bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(res)).Do(); err != nil {
+						log.Print(err)
+					}
 
 				default:
 					res := "use /help"

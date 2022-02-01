@@ -14,9 +14,7 @@ up:
 down:
 	docker-compose down
 
-upd:
-	docker-compose -f docker-compose-dev.yml up -d
+updb:
+	docker-compose up -d db
 	docker-compose logs -f
 
-downd:
-	docker-compose -f docker-compose-dev.yml down
