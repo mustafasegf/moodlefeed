@@ -50,7 +50,7 @@ func (ctrl *Controller) Login(ctx *gin.Context) {
 	}
 
 	// get id
-	sceleUser, err := httprequest.GetSceleId(token.Token)
+	sceleUser, err := httprequest.GetSceleId(token)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
@@ -59,7 +59,9 @@ func (ctrl *Controller) Login(ctx *gin.Context) {
 		return
 	}
 	// save user
-	err = ctrl.svc.CreateUser(token.Token, lineID, sceleUser.SceleID)
+	err = ctrl.svc.CreateUser(token, sceleUser.SceleID)
+
+	// TODO: added user client
 	if err != nil {
 		if strings.Contains(err.Error(), "unique") {
 			err = errors.New("user already login")
@@ -71,7 +73,7 @@ func (ctrl *Controller) Login(ctx *gin.Context) {
 	}
 
 	// get all course
-	courses, err := httprequest.GetCourses(token.Token, sceleUser.SceleID)
+	courses, err := httprequest.GetCourses(token, sceleUser.SceleID)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
@@ -79,7 +81,7 @@ func (ctrl *Controller) Login(ctx *gin.Context) {
 
 	// save to db
 	for _, course := range courses {
-		_, err := ctrl.svc.CreateNewCourse(token.Token, sceleUser.SceleID, course)
+		_, err := ctrl.svc.CreateNewCourse(token, sceleUser.SceleID, course)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 			return

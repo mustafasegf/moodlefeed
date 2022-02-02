@@ -7,14 +7,14 @@ import (
 )
 
 func (s *Server) SetupRouter() {
-	sceleRepo := scele.NewRepo(s.Db)
+	sceleRepo := scele.NewRepo(s.DB)
 	sceleService := scele.NewService(sceleRepo)
 	sceleController := scele.NewController(sceleService)
 
 	schedule := scele.NewSchedule(sceleService, s.line)
 	go schedule.RunSchedule()
 
-	lineRepo := line.NewRepo(s.Db)
+	lineRepo := line.NewRepo(s.DB)
 	lineService := line.NewService(lineRepo)
 	lineController := line.NewController(s.line, lineService, sceleService)
 	s.router.LoadHTMLGlob("templates/*")

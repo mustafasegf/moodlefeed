@@ -1,12 +1,10 @@
 package line
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/line/line-bot-sdk-go/v7/linebot"
-	"github.com/mustafasegf/scelefeed/entity"
 	"github.com/mustafasegf/scelefeed/scele"
 )
 
@@ -53,30 +51,10 @@ func (ctrl *Controller) LineCallback(w http.ResponseWriter, req *http.Request) {
 						continue
 					}
 
-					// get all course
-					/* courses, err := httprequest.GetCourses(user.Token, user.SceleID)
-					if err != nil {
-						log.Println(err)
-						continue
-					} */
-
 					// save to db
-					// TODO: if new course is not on db, delete on db
-					ctrl.SceleSvc.UpdateUserCourse(user.Token, user.SceleID)
-					newCourse := []entity.Course{}
-					/* for _, course := range courses {
-						_, err = ctrl.scelesvc.CreateNewCourse(user.Token, user.SceleID, course)
-						if err != nil {
-							if !strings.Contains(err.Error(), "unique") {
-								log.Println("err")
-								continue
-							}
-						} else {
-							newCourse = append(newCourse, course)
-						}
-					} */
+					res, err := ctrl.SceleSvc.UpdateUserCourse(user.Token, user.SceleID)
 
-					if _, err = ctrl.Bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(fmt.Sprintf("%v", newCourse))).Do(); err != nil {
+					if _, err = ctrl.Bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(res)).Do(); err != nil {
 						log.Print(err)
 					}
 				case "/courses":
@@ -103,7 +81,7 @@ func (ctrl *Controller) LineCallback(w http.ResponseWriter, req *http.Request) {
 				case "/help":
 					res := `/login
 /update
-/course"`
+/course`
 					if _, err = ctrl.Bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(res)).Do(); err != nil {
 						log.Print(err)
 					}

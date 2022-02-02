@@ -5,20 +5,20 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/line/line-bot-sdk-go/v7/linebot"
-	"gorm.io/gorm"
 )
 
 type Server struct {
 	router *gin.Engine
-	Db     *gorm.DB
+	DB     *pgxpool.Pool
 	line   *linebot.Client
 }
 
-func MakeServer(db *gorm.DB, line *linebot.Client) Server {
+func MakeServer(db *pgxpool.Pool, line *linebot.Client) Server {
 	router := gin.Default()
 	server := Server{
-		Db:     db,
+		DB:     db,
 		router: router,
 		line:   line,
 	}

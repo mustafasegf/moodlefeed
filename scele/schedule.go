@@ -69,15 +69,20 @@ func (s *Schedule) GetCourse() {
 					}
 					msg = append(msg, tmp)
 				}
-				fmt.Println(msg)
-				user, err := s.svc.GetIdLineFromCourse(c.CourseID)
-				if err != nil {
-					return
+
+				// fmt.Println(msg)
+				// user, err := s.svc.GetLineIDFromCourse(c.CourseID)
+				// if err != nil {
+				// 	return
+				// }
+				var clients []entity.ClientModel
+				for _, client := range clients {
+					if client.LineID.Valid {
+						s.Message(client.LineID.String, strings.Join(msg, "---\n"))
+					}
+					// TODO: add discord client
 				}
-				for _, user := range user {
-					s.Message(user.LineId, strings.Join(msg, "---\n"))
-				}
-				err = s.svc.UpdateCourseResource(c.CourseID, newCourse)
+				err := s.svc.UpdateCourseResource(c.CourseID, newCourse)
 				if err != nil {
 					log.Printf("error updating course %s with course id %d. error code : %v", c.LongName, c.CourseID, err)
 					return

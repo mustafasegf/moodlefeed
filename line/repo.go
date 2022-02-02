@@ -1,30 +1,30 @@
 package line
 
 import (
+	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/mustafasegf/scelefeed/entity"
-	"gorm.io/gorm"
 )
 
 type Repo struct {
-  DB *gorm.DB
+	DB *pgxpool.Pool
 }
 
-func NewRepo(db *gorm.DB) *Repo {
+func NewRepo(db *pgxpool.Pool) *Repo {
 	return &Repo{
 		DB: db,
 	}
 }
 
 func (repo *Repo) GetUserFromLineId(model *entity.UsersModel) (err error) {
-	fields := []string{
-		"scele_id",
-		"token",
-	}
+	// fields := []string{
+	// 	"scele_id",
+	// 	"token",
+	// }
 
-	query := repo.DB.Table("users").
-		Select(fields).
-		Find(model)
+	// query := repo.DB.Table("users").
+	// 	Select(fields).
+	// 	Find(model)
 
-	err = query.Error
+	// err = query.Error
 	return
 }

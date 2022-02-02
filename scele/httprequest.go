@@ -11,15 +11,16 @@ import (
 
 type HttpRequest struct {}
 
-func (r* HttpRequest) LoginScele(username, password string) (token entity.Token, err error) {
+func (r* HttpRequest) LoginScele(username, password string) (token string, err error) {
 	url := fmt.Sprintf("https://scele.cs.ui.ac.id/login/token.php?service=moodle_mobile_app&username=%s&password=%s", username, password)
 	resp, err := http.Get(url)
 	if err != nil {
 		return
 	}
 	defer resp.Body.Close()
-	token = entity.Token{}
+	tokenEntity := entity.Token{}
 	err = json.NewDecoder(resp.Body).Decode(&token)
+	token = tokenEntity.Token
 	return
 }
 
@@ -43,9 +44,9 @@ func (r* HttpRequest) GetSceleId(token string) (sceleUser entity.SceleUser, err 
 	return
 }
 
-func (r* HttpRequest) GetCourses(token string, userid int) (courses []entity.Course, err error) {
+func (r* HttpRequest) GetCourses(token string, sceleID int) (courses []entity.Course, err error) {
 	courses = make([]entity.Course, 0)
-	err = r.RequestScele(token, "core_enrol_get_users_courses", gin.H{"userid": userid}, &courses)
+	err = r.RequestScele(token, "core_enrol_get_users_courses", gin.H{"userid": sceleID}, &courses)
 	return
 }
 

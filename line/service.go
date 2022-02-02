@@ -22,9 +22,9 @@ func (svc *Service) GetLoginUrl(lineID string) (url string) {
 }
 
 func (svc *Service) GetUserFromLineID(lineID string) (user entity.UsersModel, err error) {
-	user = entity.UsersModel{
-		LineId: lineID,
-	}
-	err = svc.Repo.GetUserFromLineId(&user)
+	// user = entity.UsersModel{
+	// 	LineId: lineID,
+	// }
+	// err = svc.Repo.GetUserFromLineId(&user)
 	return
 }
